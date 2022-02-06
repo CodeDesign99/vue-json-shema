@@ -1,9 +1,11 @@
 import { reactive } from "vue"
+import { events } from "./events"
 
 export default function useBlockDragger(focusData, lastSelectBlock, data) { 
     let dragState = {
         startX: 0,
-        startY: 0
+        startY: 0,
+        dragging: false // 默认不是正在拖拽状态
     }
     const markLine = reactive({
         x: null,
@@ -11,7 +13,10 @@ export default function useBlockDragger(focusData, lastSelectBlock, data) {
     })
     const mousemove = (e) => { // 移动
         let { clientX: moveX, clientY: moveY } = e
-
+        if (!dragState.dragging) { 
+            dragState.dragging = true
+            events.emit('start') // 触发事件就会记住拖拽前的位置
+        }
         // 计算当前元素最新的left和top去线里面找，找到显示线
         // 鼠标移动后 - 鼠标移动前 + left
         const left = moveX - dragState.startX + dragState.startLeft
@@ -50,10 +55,14 @@ export default function useBlockDragger(focusData, lastSelectBlock, data) {
         document.removeEventListener('mouseup', mouseup)
         markLine.x = null
         markLine.y = null
+        if (dragState.dragging) { 
+            events.emit('end')
+        }
     }
     const mousedown = (e) => { // 点下 
         const { width: targetWidth, height: targetHeight } = lastSelectBlock.value // 拖拽的最后选中元素
         dragState = {
+            dragging: false,
             startX: e.clientX,
             startY: e.clientY, // 记录每个选中的位置上
             startLeft: lastSelectBlock.value.left, // 拖拽前的位置上 left

@@ -1,0 +1,72 @@
+{
+  "id": "3169981",
+  "name": "vue-json-shema",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "26758151",
+      "name": "重做",
+      "font_class": "forward",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "201638",
+      "name": "编辑",
+      "font_class": "edit",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "1257704",
+      "name": "刷新",
+      "font_class": "shuaxin",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "2939196",
+      "name": "关闭26",
+      "font_class": "close",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "3255777",
+      "name": "置顶",
+      "font_class": "place-top",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "3255778",
+      "name": "置底",
+      "font_class": "ploce-bottom",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "5387517",
+      "name": "撤销",
+      "font_class": "back",
+      "unicode": "eaf0",
+      "unicode_decimal": 60144
+    },
+    {
+      "icon_id": "6245125",
+      "name": "导出",
+      "font_class": "export",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "15751251",
+      "name": "构件属性导入",
+      "font_class": "import",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    }
+  ]
+}
