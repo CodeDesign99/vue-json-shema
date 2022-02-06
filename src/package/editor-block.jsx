@@ -15,14 +15,14 @@ export default defineComponent({
         const config = inject('config')
         const blockRef = ref(null)
         onMounted(() => { 
-            let { offsetWidth, offsetHeight } = blockRef.value
+            const { offsetWidth, offsetHeight } = blockRef.value
             if (props.block.alingnCenter) { // 说明是拖拽松手时渲染的，其他的不需要
                 props.block.left -= offsetWidth / 2
                 props.block.top -= offsetHeight / 2
-                
-                
                 props.block.alingnCenter = false
             }
+            props.block.width = offsetWidth
+            props.block.height = offsetHeight
         })
         return () => { 
             // 通过block的key获取对应组件对象

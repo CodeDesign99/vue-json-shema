@@ -4,7 +4,7 @@ import EditorBlock from "./editor-block";
 import deepcopy from "deepcopy";
 import { useMenuDragger } from "./useMenuDragger";
 import useFocus from "./useFocus";
-import useBlockDragger from "./useBlovkDragger";
+import useBlockDragger from "./useBlockDragger";
 
 export default defineComponent({
     props: {
@@ -33,11 +33,11 @@ export default defineComponent({
         
         // 2.实现 EditorBlock 获取焦点 , 选中后可能就直接拖动了
         // 2.1 获取焦点
-        const { blockMousedown, containerMousedown, focusData } = useFocus(data, (e) => { 
+        const { blockMousedown, containerMousedown, focusData, lastSelectBlock } = useFocus(data, (e) => { 
             mousedown(e)
         })
         // 2.2 实现组件拖拽
-        const { mousedown } = useBlockDragger(focusData)
+        const { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock, data)
         
         return () => <div class="editor">
             <div class="editor-left">
@@ -67,13 +67,19 @@ export default defineComponent({
                         onMousedown={ containerMousedown }
                     >
                         {
-                            (data.value.blocks.map(block => <div>
+                            (data.value.blocks.map((block, index) => <div>
                                 <EditorBlock
                                     class={ block.focus ? 'editor-block-focus' : '' }
                                     block={block}
-                                    onMousedown={ (e) => blockMousedown(e, block) }
+                                    onMousedown={ (e) => blockMousedown(e, block, index) }
                                 ></EditorBlock>
                             </div>))
+                        }
+                        {
+                            markLine.x !== null && <div class="line-x" style={{ left: markLine.x + 'px' }}></div>
+                        }
+                        {
+                            markLine.y !== null && <div class="line-y" style={{ top: markLine.y + 'px' }}></div>
                         }
                     </div>
                 </div>
