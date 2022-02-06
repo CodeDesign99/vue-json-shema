@@ -39,8 +39,6 @@ export default defineComponent({
         // 2.2 实现组件拖拽
         const { mousedown } = useBlockDragger(focusData)
         
-        // 3.实现拖拽多个元素的功能
-        
         return () => <div class="editor">
             <div class="editor-left">
                 { /* 根据注册列表 渲染对应的内容 可以实现H5的拖拽*/ }

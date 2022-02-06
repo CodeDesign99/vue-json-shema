@@ -14,10 +14,14 @@ export default function useFocus(data, callback) {
         e.stopPropagation() 
         // block上我们规划一个属性 focus 获取焦点后就将focus变为true
         if (e.shiftKey) {
-            block.focus = !block.focus
-        } else { 
+            if (focusData.value.focus.length <= 1) {
+                block.focus = true
+            } else { 
+                block.focus = !block.focus
+            }
+        } else if(!block.focus){ 
             clearBlockFocus() // 清空其他foucs属性
-            block.focus = !block.focus
+            block.focus = true
         }
         callback(e)
     }
