@@ -2,7 +2,7 @@ import deepcopy from "deepcopy"
 import { onUnmounted } from "vue"
 import { events } from "./events"
 
-export default function useCommand(data) {
+export default function useCommand(data, focusData) {
     const state = { // 前进后退需要指针
         current: -1, // 前进后退的索引值
         queue: [], //存放所有的操作指令
@@ -14,7 +14,7 @@ export default function useCommand(data) {
     const registry = (command) => {
         state.commandArray.push(command)
         state.commands[command.name] = (...args) => { // 命令名字对应执行函数
-            const { redo, undo } = command.execute(args)
+            const { redo, undo } = command.execute(...args)
             redo()
             if (!command.pushQueue) {
                 return
@@ -95,19 +95,121 @@ export default function useCommand(data) {
         name: 'updateContainer',
         pushQueue: true,
         execute(newValue) {
-            let state = {
+            const state = {
                 before: data.value,
                 after: newValue
             }
             return {
-                redo: () => {
+                redo() {
                     data.value = state.after
                 },
-                undo: () => {
+                undo() {
                     data.value = state.before
                 }
             }
 
+        }
+    })
+    registry({
+        name: 'updateBlock',
+        pushQueue: true,
+        execute(newBlock, oldBlock) {
+            const state = {
+                before: data.value.blocks,
+                after: (() => {
+                    const blocks = [...data.value.blocks]
+                    const index = data.value.blocks.indexOf(oldBlock)
+                    if (index > -1) {
+                        blocks.splice(index, 1, newBlock)
+                    }
+                    return blocks
+                })()
+            }
+            return {
+                redo() {
+                    data.value = { ...data.value, blocks: state.after }
+                },
+                undo() {
+                    data.value = { ...data.value, blocks: state.before }
+                }
+            }
+
+        }
+    })
+    registry({
+        name: 'placeTop',
+        pushQueue: true,
+        execute() {
+            const before = deepcopy(data.value.blocks)
+            const after = (() => {
+                const { focus, unfocused } = focusData.value
+
+                let maxZIndex = unfocused.reduce((prev, block) => {
+                    return Math.max(prev, block.zIndex)
+                }, Number.MIN_SAFE_INTEGER)
+
+                focus.forEach(block => block.zIndex = maxZIndex + 1)
+
+                return data.value.blocks
+            })()
+
+            return {
+                undo() {
+                    data.value = { ...data.value, blocks: before }
+                },
+                redo() {
+                    data.value = { ...data.value, blocks: after }
+                }
+            }
+        }
+    })
+    registry({
+        name: 'placeBottom',
+        pushQueue: true,
+        execute() {
+            const before = deepcopy(data.value.blocks)
+            const after = (() => {
+                const { focus, unfocused } = focusData.value
+                let minZIndex = unfocused.reduce((prev, block) => {
+                    return Math.min(prev, block.zIndex)
+                }, Number.MAX_SAFE_INTEGER) - 1
+
+                if (minZIndex < 0) {
+                    minZIndex = 0
+                    unfocused.forEach(block => block.zIndex += 1)
+                }
+                focus.forEach(block => block.zIndex = minZIndex)
+
+                return data.value.blocks
+            })()
+
+            return {
+                undo() {
+                    data.value = { ...data.value, blocks: before }
+                },
+                redo() {
+                    data.value = { ...data.value, blocks: after }
+                }
+            }
+        }
+    })
+    registry({
+        name: 'delete',
+        pushQueue: true,
+        execute() {
+            const state = {
+                before: deepcopy(data.value.blocks),
+                after: focusData.value.unfocused
+            }
+
+            return {
+                redo() {
+                    data.value = { ...data.value, blocks: state.after }
+                },
+                undo() {
+                    data.value = { ...data.value, blocks: state.before }
+                }
+            }
         }
     })
 

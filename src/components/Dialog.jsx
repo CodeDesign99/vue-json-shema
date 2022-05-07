@@ -35,7 +35,7 @@ const DialogComponent = defineComponent({
                     default: () => <ElInput
                         type='textarea'
                         v-model={state.option.content}
-                        row={10}
+                        rows={10}
                     ></ElInput>,
                     footer: () => state.option.footer && <div>
                         <ElButton onClick={onCancel}>取消</ElButton>

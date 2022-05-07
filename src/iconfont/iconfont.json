@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4347521",
+      "name": "icon_预览",
+      "font_class": "browse",
+      "unicode": "eb8a",
+      "unicode_decimal": 60298
+    },
+    {
+      "icon_id": "11148060",
+      "name": "delete",
+      "font_class": "delete",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
       "icon_id": "26758151",
       "name": "重做",
       "font_class": "forward",
@@ -43,7 +57,7 @@
     {
       "icon_id": "3255778",
       "name": "置底",
-      "font_class": "ploce-bottom",
+      "font_class": "place-bottom",
       "unicode": "e648",
       "unicode_decimal": 58952
     },

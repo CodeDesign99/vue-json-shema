@@ -6,15 +6,15 @@ export default defineComponent({
             type: Object
         }
     },
-    setup(props) { 
+    setup(props) {
         const blockStyles = computed(() => ({
             top: `${props.block.top}px`,
             left: `${props.block.left}px`,
-            zIndex: `${props.block.zIndex}px`
+            zIndex: props.block.zIndex
         }))
         const config = inject('config')
         const blockRef = ref(null)
-        onMounted(() => { 
+        onMounted(() => {
             const { offsetWidth, offsetHeight } = blockRef.value
             if (props.block.alingnCenter) { // 说明是拖拽松手时渲染的，其他的不需要
                 props.block.left -= offsetWidth / 2
@@ -24,7 +24,7 @@ export default defineComponent({
             props.block.width = offsetWidth
             props.block.height = offsetHeight
         })
-        return () => { 
+        return () => {
             // 通过block的key获取对应组件对象
             const component = config.componentMap[props.block.key]
             // 获取render返回组件
@@ -34,7 +34,7 @@ export default defineComponent({
                 style={blockStyles.value}
                 ref={blockRef}
             >
-                { RenderComponent }
+                {RenderComponent}
             </div>
         }
     }
