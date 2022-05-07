@@ -1,17 +1,22 @@
 @import "../iconfont/iconfont.css";
-.editor{
+
+.editor {
     width: 100%;
     height: 100%;
-    &-left, &-right{
+
+    &-left,
+    &-right {
         position: absolute;
         width: 270px;
-        background-color: red;
+        // background-color: red;
         top: 0;
         bottom: 0;
     }
-    &-left{
+
+    &-left {
         left: 0;
-        &-item{
+
+        &-item {
             position: relative;
             width: 250px;
             min-height: 100px;
@@ -26,7 +31,8 @@
             user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
-            > span{
+
+            >span {
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -34,7 +40,8 @@
                 color: #fff;
                 padding: 4px;
             }
-            &::after{
+
+            &::after {
                 content: '';
                 position: absolute;
                 top: 0;
@@ -46,10 +53,12 @@
             }
         }
     }
-    &-right{
+
+    &-right {
         right: 0;
     }
-    &-top{
+
+    &-top {
         position: absolute;
         right: 280px;
         left: 280px;
@@ -57,7 +66,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        &-button{
+
+        &-button {
             width: 60px;
             height: 60px;
             display: flex;
@@ -67,19 +77,23 @@
             cursor: pointer;
             background-color: rgba(0, 0, 0, 0.3);
             color: #fff;
-            & + &{
+
+            &+& {
                 margin-left: 3px;
             }
         }
     }
-    &-container{
+
+    &-container {
         padding: 80px 270px 0;
         height: 100%;
         box-sizing: border-box;
-        &-canvas{
+
+        &-canvas {
             overflow: scroll;
             height: 100%;
-            &__content{
+
+            &__content {
                 position: relative;
                 margin: 20px auto;
                 background-color: yellow;
@@ -87,8 +101,10 @@
         }
     }
 }
-.editor-block{
+
+.editor-block {
     position: absolute;
+
     &::after {
         content: '';
         position: absolute;
@@ -98,18 +114,21 @@
         bottom: 0;
     }
 }
-.editor-block-focus{
-    &::after{
+
+.editor-block-focus {
+    &::after {
         border: 1px dashed red;
     }
 }
-.line-x{
+
+.line-x {
     position: absolute;
     top: 0;
     bottom: 0;
     border-left: 1px dashed red;
 }
-.line-y{
+
+.line-y {
     position: absolute;
     left: 0;
     right: 0;

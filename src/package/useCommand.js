@@ -2,7 +2,7 @@ import deepcopy from "deepcopy"
 import { onUnmounted } from "vue"
 import { events } from "./events"
 
-export default function useCommand(data) { 
+export default function useCommand(data) {
     const state = { // 前进后退需要指针
         current: -1, // 前进后退的索引值
         queue: [], //存放所有的操作指令
@@ -13,14 +13,14 @@ export default function useCommand(data) {
 
     const registry = (command) => {
         state.commandArray.push(command)
-        state.commands[command.name] = () => { // 命令名字对应执行函数
-            const { redo, undo } = command.execute()
+        state.commands[command.name] = (...args) => { // 命令名字对应执行函数
+            const { redo, undo } = command.execute(args)
             redo()
-            if (!command.pushQueue) { 
+            if (!command.pushQueue) {
                 return
             }
             const { queue, current } = state
-            if (queue.length) { 
+            if (queue.length) {
                 queue.slice(0, current + 1) // 可能在放置的过程中有撤销操作，所以根据当前最新的current值来计算新的
                 state.queue = queue
             }
@@ -33,11 +33,11 @@ export default function useCommand(data) {
     registry({
         name: 'redo',
         keyboard: 'ctrl+y',
-        execute() { 
+        execute() {
             return {
-                redo() { 
+                redo() {
                     const item = state.queue[state.current + 1] // 找到当前的下一步还原操作
-                    if (item) { 
+                    if (item) {
                         item.redo && item.redo()
                         state.current++
                     }
@@ -48,12 +48,12 @@ export default function useCommand(data) {
     registry({
         name: 'undo',
         keyboard: 'ctrl+z',
-        execute() { 
+        execute() {
             return {
-                redo() { 
+                redo() {
                     if (state.current === -1) return
                     const item = state.queue[state.current] // 找到上一步还原
-                    if (item) { 
+                    if (item) {
                         item.undo && item.undo()
                         state.current--
                     }
@@ -61,7 +61,6 @@ export default function useCommand(data) {
             }
         }
     })
-
     registry({
         name: 'drag',
         pushQueue: true, // 如果希望将操作放入队列中可以加一个属性 表示的等会操作要放到队列里
@@ -92,6 +91,25 @@ export default function useCommand(data) {
             }
         }
     })
+    registry({
+        name: 'updateContainer',
+        pushQueue: true,
+        execute(newValue) {
+            let state = {
+                before: data.value,
+                after: newValue
+            }
+            return {
+                redo: () => {
+                    data.value = state.after
+                },
+                undo: () => {
+                    data.value = state.before
+                }
+            }
+
+        }
+    })
 
     const keyboardEvent = (() => {
         const keyCodes = {
@@ -105,9 +123,9 @@ export default function useCommand(data) {
             keyString.push(keyCodes[keyCode])
             keyString = keyString.join('+')
 
-            state.commandArray.forEach(({ keyboard, name}) => { 
+            state.commandArray.forEach(({ keyboard, name }) => {
                 if (!keyboard) return
-                if (keyboard === keyString) { 
+                if (keyboard === keyString) {
                     state.commands[name]()
                     e.preventDefault()
                 }
@@ -117,13 +135,13 @@ export default function useCommand(data) {
             window.addEventListener('keydown', onKeydown)
             return () => { // 销毁事件
                 window.removeEventListener('keydown', onKeydown)
-            }   
+            }
         }
         return init
     })();
 
 
-    (() => { 
+    (() => {
         // 监听键盘事件
         state.destoryArray.push(keyboardEvent())
         state.commandArray.forEach(command => command.init && state.destoryArray.push(command.init()))

@@ -6,6 +6,7 @@ import { useMenuDragger } from "./useMenuDragger";
 import useFocus from "./useFocus";
 import useBlockDragger from "./useBlockDragger";
 import useCommand from "./useCommand";
+import { $dialog } from "../components/Dialog";
 
 export default defineComponent({
     props: {
@@ -16,14 +17,14 @@ export default defineComponent({
     emits: ['update:modelValue'],
     setup(props, ctx) {
         const data = computed({
-            get() { 
+            get() {
                 return props.modelValue
             },
-            set(newValue) { 
+            set(newValue) {
                 ctx.emit('update:modelValue', deepcopy(newValue))
             }
         })
-        const containerStyles = computed(() => ({ 
+        const containerStyles = computed(() => ({
             width: data.value.container.width + 'px',
             height: data.value.container.height + 'px'
         }))
@@ -31,24 +32,45 @@ export default defineComponent({
         const containerRef = ref(null)
         // 1.实现菜单的拖拽功能
         const { dragstart, dragend } = useMenuDragger(containerRef, data)
-        
+
         // 2.实现 EditorBlock 获取焦点 , 选中后可能就直接拖动了
         // 2.1 获取焦点
-        const { blockMousedown, containerMousedown, focusData, lastSelectBlock } = useFocus(data, (e) => { 
+        const { blockMousedown, containerMousedown, focusData, lastSelectBlock } = useFocus(data, (e) => {
             mousedown(e)
         })
         // 2.2 实现组件拖拽
         const { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock, data)
-        
+
         const { commands } = useCommand(data)
         const buttons = [
             { label: '撤销', icon: 'icon-back', handler: () => commands.undo() },
             { label: '重做', icon: 'icon-forward', handler: () => commands.redo() },
+            {
+                label: '导出', icon: 'icon-export', handler: () => {
+                    $dialog({
+                        title: '导出json',
+                        content: JSON.stringify(data.value),
+                        footer: false
+                    })
+                }
+            },
+            {
+                label: '导入', icon: 'icon-import', handler: () => {
+                    $dialog({
+                        title: '导入json',
+                        content: '',
+                        footer: true,
+                        onConfirm(json) {
+                            commands.updateContainer(JSON.parse(json))
+                        }
+                    })
+                }
+            }
         ]
 
         return () => <div class="editor">
             <div class="editor-left">
-                { /* 根据注册列表 渲染对应的内容 可以实现H5的拖拽*/ }
+                { /* 根据注册列表 渲染对应的内容 可以实现H5的拖拽*/}
                 {
                     config.componentList.map(component => <div
                         class="editor-left-item"
@@ -79,14 +101,14 @@ export default defineComponent({
                         class="editor-container-canvas__content"
                         style={containerStyles.value}
                         ref={containerRef}
-                        onMousedown={ containerMousedown }
+                        onMousedown={containerMousedown}
                     >
                         {
                             (data.value.blocks.map((block, index) => <div>
                                 <EditorBlock
-                                    class={ block.focus ? 'editor-block-focus' : '' }
+                                    class={block.focus ? 'editor-block-focus' : ''}
                                     block={block}
-                                    onMousedown={ (e) => blockMousedown(e, block, index) }
+                                    onMousedown={(e) => blockMousedown(e, block, index)}
                                 ></EditorBlock>
                             </div>))
                         }
