@@ -4,6 +4,9 @@ export default defineComponent({
     props: {
         block: {
             type: Object
+        },
+        formData: {
+            type: Object
         }
     },
     setup(props) {
@@ -29,7 +32,15 @@ export default defineComponent({
             const component = config.componentMap[props.block.key]
             // 获取render返回组件
             const RenderComponent = component.render({
-                props: props.block.props
+                props: props.block.props,
+                model: Object.keys(component.model || {}).reduce((prev, modelName) => {
+                    const propName = props.block.model[modelName]
+                    prev[modelName] = {
+                        modelValue: props.formData[propName],
+                        "onUpdate:modelValue": val => props.formData[propName] = val
+                    }
+                    return prev
+                }, {})
             })
             return <div
                 class="editor-block"

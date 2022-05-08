@@ -15,6 +15,9 @@ export default defineComponent({
     props: {
         modelValue: {
             type: Object
+        },
+        formData: {
+            type: Object
         }
     },
     emits: ['update:modelValue'],
@@ -166,6 +169,7 @@ export default defineComponent({
                             <EditorBlock
                                 class={block.focus ? 'editor-block-focus ' : ''}
                                 block={block}
+                                formData={props.formData}
                             ></EditorBlock>
                         </div>))
                     }
@@ -229,6 +233,7 @@ export default defineComponent({
                                         block={block}
                                         onMousedown={(e) => blockMousedown(e, block, index)}
                                         onContextmenu={(e) => onContextMenuBlock(e, block)}
+                                        formData={props.formData}
                                     ></EditorBlock>
                                 </div>))
                             }

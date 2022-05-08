@@ -62,6 +62,9 @@ registerConfig.register({
 registerConfig.register({
     label: '输入框',
     preview: () => <ElInput placeholder="预览输入框"></ElInput>,
-    render: () => <ElInput placeholder="渲染输入框"></ElInput>,
-    key: 'input'
+    render: ({ model }) => <ElInput placeholder="渲染输入框" {...model.default}></ElInput>,
+    key: 'input',
+    model: {
+        default: '绑定字段'
+    }
 })
