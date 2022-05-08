@@ -9,6 +9,7 @@ import useCommand from "./useCommand";
 import { $dialog } from "../components/Dialog";
 import { ElButton } from "element-plus";
 import { $dropdown, DropdownItem } from "../components/Dropdown";
+import EditorOperator from "./editor-operator";
 
 export default defineComponent({
     props: {
@@ -198,7 +199,14 @@ export default defineComponent({
                         </div>
                     })
                 }</div>
-                <div class="editor-right">属性控制栏</div>
+                <div class="editor-right">
+                    <EditorOperator
+                        block={lastSelectBlock.value}
+                        data={data.value}
+                        updateContainer={commands.updateContainer}
+                        updateBlock={commands.updateBlock}
+                    ></EditorOperator>
+                </div>
                 <div class="editor-container">
                     { /* 负责产生滚动条 */}
                     <div class="editor-container-canvas">

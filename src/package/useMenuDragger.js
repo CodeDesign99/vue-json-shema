@@ -1,31 +1,34 @@
 import { events } from "./events"
 
-export function useMenuDragger(containerRef, data) { 
+export function useMenuDragger(containerRef, data) {
     let currentComponent = null
-    const dragenter = (e) => { 
+    const dragenter = (e) => {
         e.dataTransfer.dropEffect = 'move' // H5拖动图标
     }
-    const dragover = (e) => { 
+    const dragover = (e) => {
         e.preventDefault()
     }
-    const dragleave = (e) => { 
+    const dragleave = (e) => {
         e.dataTransfer.dropEffect = 'none'
     }
-    const drop = (e) => { 
+    const drop = (e) => {
         const blocks = data.value.blocks // 已经渲染的组件
-        data.value = { ...data.value, blocks: [
-            ...blocks,
-            {    
-                top: e.offsetY,
-                left: e.offsetX,
-                zIndex: 1,
-                key: currentComponent.key,
-                alignCenter: true // 松手时可以居中
-            }
-        ]}
+        data.value = {
+            ...data.value, blocks: [
+                ...blocks,
+                {
+                    top: e.offsetY,
+                    left: e.offsetX,
+                    zIndex: 1,
+                    key: currentComponent.key,
+                    alignCenter: true, // 松手时可以居中
+                    props: {}
+                }
+            ]
+        }
         currentComponent = null
     }
-    const dragstart = (e, component) => { 
+    const dragstart = (e, component) => {
         // dragenter 进入元素中 增加一个移动标识
         // dragover 在目标元素中经过 必须要阻止默认行为 否则不能触发drap
         // dragleave 离开元素时 需要增加一个禁用标识
@@ -37,7 +40,7 @@ export function useMenuDragger(containerRef, data) {
         currentComponent = component
         events.emit('start') // 发布start
     }
-    const dragend = () => { 
+    const dragend = () => {
         containerRef.value.removeEventListener('dragenter', dragenter)
         containerRef.value.removeEventListener('dragover', dragover)
         containerRef.value.removeEventListener('dragleave', dragleave)

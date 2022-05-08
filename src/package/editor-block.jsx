@@ -28,7 +28,9 @@ export default defineComponent({
             // 通过block的key获取对应组件对象
             const component = config.componentMap[props.block.key]
             // 获取render返回组件
-            const RenderComponent = component.render()
+            const RenderComponent = component.render({
+                props: props.block.props
+            })
             return <div
                 class="editor-block"
                 style={blockStyles.value}
