@@ -1,7 +1,7 @@
 // 列表区可以显示所有物料
 // key对应的组件映射关系
 import Range from '../components/Range'
-import { ElButton, ElInput } from "element-plus"
+import { ElButton, ElInput, ElOption, ElSelect } from "element-plus"
 
 function createEditorConfig() {
     const componentList = []
@@ -22,6 +22,7 @@ export const registerConfig = createEditorConfig()
 const createInputProp = (label) => ({ type: 'input', label })
 const createColorProp = (label) => ({ type: 'color', label })
 const createSelectProp = (label, options) => ({ type: 'select', label, options })
+const createTableProp = (label, table) => ({ type: 'table', label, table })
 
 registerConfig.register({
     label: '文本',
@@ -83,5 +84,29 @@ registerConfig.register({
     model: {
         start: '开始范围字段',
         end: '结束范围字段'
+    }
+})
+
+registerConfig.register({
+    label: 'select选择器',
+    preview: () => <ElSelect modelValue=''></ElSelect>,
+    render: ({ props, model }) => <ElSelect {...model.default}>
+        {(props.options || []).map((option, index) => {
+            console.log(model.default)
+            return <ElOption label={option.label} value={option.value} key={index}></ElOption>
+        })}
+    </ElSelect>,
+    key: 'select',
+    props: {
+        options: createTableProp('下拉选项', {
+            options: [
+                { label: '显示值', field: 'label' },
+                { label: '绑定值', field: 'value' }
+            ],
+            key: 'label'
+        })
+    },
+    model: {
+        default: '绑定字段'
     }
 })
