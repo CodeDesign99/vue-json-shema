@@ -177,3 +177,66 @@
         display: inline-flex;
     }
 }
+
+.block-resize {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: brown;
+    z-index: 1000;
+    user-select: none;
+}
+
+.block-resize-top {
+    top: -2px;
+    left: calc(50% - 2px);
+    cursor: row-resize;
+}
+
+.block-resize-bottom {
+    bottom: -2px;
+    left: calc(50% - 2px);
+    cursor: row-resize;
+}
+
+.block-resize-left {
+    left: -2px;
+    top: calc(50% - 2px);
+    cursor: col-resize;
+}
+
+.block-resize-right {
+    right: -2px;
+    top: calc(50% - 2px);
+    cursor: col-resize;
+}
+
+.block-resize-top-left {
+    top: -2px;
+    left: -2px;
+    cursor: nwse-resize;
+}
+
+.block-resize-top-right {
+    top: -2px;
+    right: -2px;
+    cursor: nesw-resize;
+}
+
+.block-resize-bottom-left {
+    bottom: -2px;
+    left: -2px;
+    cursor: nesw-resize;
+}
+
+.block-resize-bottom-right {
+    bottom: -2px;
+    right: -2px;
+    cursor: nwse-resize;
+}
+
+.el-button,
+.el-input {
+    transform: none;
+    transition: none;
+}
